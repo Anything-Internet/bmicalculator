@@ -111,10 +111,10 @@ class _InputPageState extends State<InputPage> {
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly,
                   ],
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Height',
                     constraints: BoxConstraints(
                       maxWidth: 100,
@@ -129,10 +129,10 @@ class _InputPageState extends State<InputPage> {
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly,
                   ],
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Weight',
                     constraints: BoxConstraints(
                       maxWidth: 100,

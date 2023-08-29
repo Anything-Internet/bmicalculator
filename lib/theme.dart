@@ -77,21 +77,21 @@ ThemeData _darkTheme() {
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(6),
-        borderSide: BorderSide(
+        borderSide: const BorderSide(
           color: myRed,
           width: 1,
         ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(6),
-        borderSide: BorderSide(
+        borderSide: const BorderSide(
           color: myRed,
           width: 1,
         ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(6),
-        borderSide: BorderSide(
+        borderSide: const BorderSide(
           color: myWhite,
           width: 1,
         ),
