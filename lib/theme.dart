@@ -58,13 +58,12 @@ ThemeData _darkTheme() {
       elevation: 0,
       centerTitle: true,
     ),
+
     dividerTheme: const DividerThemeData(
       color: myGrey,
       thickness: 1,
       space: 40,
     ),
-
-
 
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,

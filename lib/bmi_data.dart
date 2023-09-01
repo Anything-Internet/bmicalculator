@@ -38,4 +38,12 @@ class BmiData {
   set kilos(value) { _pounds = value * 2.2; }
   set cms(value) { _inches = value * 0.39; }
 
+
+
+  BmiData({double pounds = 0, double inches = 0}) {
+    _pounds = pounds;
+    _inches = inches;
+    print("BmiData: $pounds $inches");
+  }
+
 }
