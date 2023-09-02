@@ -220,7 +220,7 @@ class _InputPageState extends State<InputPage> {
               alignment: Alignment.centerRight,
               child: const Text("Weight: "),
             ),
-            Container(
+            SizedBox(
               width: 70,
               child: TextFormField(
                 controller: _weightController,
@@ -267,18 +267,22 @@ class ReusableCard extends StatelessWidget {
     const double defHalfMargin = defMargin / 2;
     late EdgeInsetsGeometry? margin;
 
-    if (position == "left")
+    if (position == "left") {
       margin = const EdgeInsets.fromLTRB(
           defMargin, defHalfMargin, defHalfMargin, defHalfMargin);
-    if (position == "right")
+    }
+    if (position == "right") {
       margin = const EdgeInsets.fromLTRB(
           defHalfMargin, defHalfMargin, defMargin, defHalfMargin);
-    if (position == "center")
+    }
+    if (position == "center") {
       margin = const EdgeInsets.fromLTRB(
           defHalfMargin, defHalfMargin, defHalfMargin, defHalfMargin);
-    if (position == "wide")
+    }
+    if (position == "wide") {
       margin = const EdgeInsets.fromLTRB(
           defMargin, defHalfMargin, defMargin, defHalfMargin);
+    }
 
     return Container(
       margin: margin,
