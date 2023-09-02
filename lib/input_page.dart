@@ -63,6 +63,7 @@ class _InputPageState extends State<InputPage> {
 
   final _heightController = TextEditingController();
   final _weightController = TextEditingController();
+
   @override
   void dispose() {
     // other dispose methods
@@ -88,42 +89,11 @@ class _InputPageState extends State<InputPage> {
     return Scaffold(
       appBar: appBar(widget.title),
       body: body(),
-      bottomNavigationBar: bottomNavBar(),
+      bottomNavigationBar: const BottomNavBar(),
       //floatingActionButton: floatingActionButton(),
     );
   }
 
-  ////////////////////////////////////////////
-  appBar(title) => AppBar(
-        title: Text(title),
-        // actions: [
-        //   Switch(
-        //     value: isDarkMode,
-        //     onChanged: (value) {
-        //       isDarkMode = value;
-        //       setTheme();
-        //     },
-        //   ),
-        // ],
-      );
-
-  ////////////////////////////////////////////
-  bottomNavBar() => BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
-          ),
-        ],
-      );
 
   ////////////////////////////////////////////
   floatingActionButton() => FloatingActionButton(
@@ -192,7 +162,7 @@ class _InputPageState extends State<InputPage> {
               alignment: Alignment.centerRight,
               child: const Text("Height: "),
             ),
-            SizedBox(
+            Container(
               width: 70,
               child: TextFormField(
                 controller: _heightController,
@@ -247,6 +217,47 @@ class _InputPageState extends State<InputPage> {
               saveButtonEnabled() ? saveBmiData() : null;
             },
             child: const Text("Save"))
+      ],
+    );
+  }
+}
+
+appBar(title) {
+  return AppBar(
+    title: Text(title),
+    // actions: [
+    //   Switch(
+    //     value: isDarkMode,
+    //     onChanged: (value) {
+    //       isDarkMode = value;
+    //       setTheme();
+    //     },
+    //   ),
+    // ],
+  );
+}
+
+class BottomNavBar extends StatelessWidget {
+  const BottomNavBar({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.business),
+          label: 'Business',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.school),
+          label: 'School',
+        ),
       ],
     );
   }
