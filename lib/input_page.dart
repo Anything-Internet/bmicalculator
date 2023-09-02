@@ -138,25 +138,41 @@ class _InputPageState extends State<InputPage> {
           child: Row(
         children: [
           Expanded(
-            child: ReusableCard( child: bmiForm(),position: "left",),
+            child: ReusableCard(
+              child: bmiForm(),
+              position: "left",
+            ),
           ),
           Expanded(
-            child: ReusableCard(child: bmiForm(),position: "right",),
+            child: ReusableCard(
+              child: bmiForm(),
+              position: "right",
+            ),
           ),
         ],
       )),
       Expanded(
-        child: ReusableCard(color: const Color(0xFF3D3E44), child: bmiForm(),position: "wide",),
+        child: ReusableCard(
+          color: const Color(0xFF3D3E44),
+          child: bmiForm(),
+          position: "wide",
+        ),
       ),
       Expanded(
           child: Row(
         children: [
           Expanded(
-            child: ReusableCard( child: bmiForm(), position: "left",),
+            child: ReusableCard(
+              child: bmiForm(),
+              position: "left",
+            ),
           ),
           Expanded(
-            child: ReusableCard(child: bmiForm(), position: "right",),
+            child: ReusableCard(
+              child: bmiForm(),
+              position: "right",
             ),
+          ),
         ],
       )),
     ]);
@@ -224,9 +240,9 @@ class _InputPageState extends State<InputPage> {
           ],
         ),
         OutlinedButton(
-          style: ButtonStyle(
-            minimumSize: MaterialStateProperty.all(Size(135, 40)),
-          ),
+            style: ButtonStyle(
+              minimumSize: MaterialStateProperty.all(Size(135, 40)),
+            ),
             onPressed: () {
               saveButtonEnabled() ? saveBmiData() : null;
             },
@@ -242,7 +258,8 @@ class ReusableCard extends StatelessWidget {
   final Color? color;
   final Widget? child;
 
-  const ReusableCard({super.key,  this.color, this.child, this.position = "wide"});
+  const ReusableCard(
+      {super.key, this.color, this.child, this.position = "wide"});
 
   @override
   Widget build(BuildContext context) {
@@ -250,10 +267,18 @@ class ReusableCard extends StatelessWidget {
     const double defHalfMargin = defMargin / 2;
     late EdgeInsetsGeometry? margin;
 
-    if (position == "left") margin = const EdgeInsets.fromLTRB(defMargin, defHalfMargin, defHalfMargin, defHalfMargin);
-    if (position == "right") margin = const EdgeInsets.fromLTRB(defHalfMargin, defHalfMargin, defMargin, defHalfMargin);
-    if (position == "center") margin = const EdgeInsets.fromLTRB(defHalfMargin, defHalfMargin, defHalfMargin, defHalfMargin);
-    if (position == "wide") margin = const EdgeInsets.fromLTRB(defMargin, defHalfMargin, defMargin, defHalfMargin);
+    if (position == "left")
+      margin = const EdgeInsets.fromLTRB(
+          defMargin, defHalfMargin, defHalfMargin, defHalfMargin);
+    if (position == "right")
+      margin = const EdgeInsets.fromLTRB(
+          defHalfMargin, defHalfMargin, defMargin, defHalfMargin);
+    if (position == "center")
+      margin = const EdgeInsets.fromLTRB(
+          defHalfMargin, defHalfMargin, defHalfMargin, defHalfMargin);
+    if (position == "wide")
+      margin = const EdgeInsets.fromLTRB(
+          defMargin, defHalfMargin, defMargin, defHalfMargin);
 
     return Container(
       margin: margin,
@@ -262,7 +287,6 @@ class ReusableCard extends StatelessWidget {
         color: color ?? defColor,
         borderRadius: BorderRadius.circular(10.0),
         border: Border.all(
-
           color: Colors.grey.shade800,
           width: 2,
         ),
@@ -271,5 +295,3 @@ class ReusableCard extends StatelessWidget {
     );
   }
 }
-
-
