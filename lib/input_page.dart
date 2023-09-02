@@ -192,7 +192,7 @@ class _InputPageState extends State<InputPage> {
               alignment: Alignment.centerRight,
               child: const Text("Height: "),
             ),
-            Container(
+            SizedBox(
               width: 70,
               child: TextFormField(
                 controller: _heightController,
