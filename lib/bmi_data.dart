@@ -43,7 +43,5 @@ class BmiData {
   BmiData({double pounds = 0, double inches = 0}) {
     _pounds = pounds;
     _inches = inches;
-    print("BmiData: $pounds $inches");
   }
-
 }

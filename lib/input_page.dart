@@ -34,7 +34,8 @@ class _InputPageState extends State<InputPage> {
       _heightController.clear();
       _weightController.clear();
       bmiDataList.forEach((element) {
-        print("bmiDataList: ${element.pounds} ${element.inches} = ${element.bmi}");
+        print(
+            "bmiDataList:  ${element.inches} ${element.pounds} = ${element.bmi.toStringAsFixed(2)}");
       });
     });
   }
@@ -45,10 +46,11 @@ class _InputPageState extends State<InputPage> {
     }
     return false;
   }
+
   setBmiData(String field, String value) {
     value = value == "" ? "0" : value;
-    print("form: $field $value");
-    print("bmiData: ${bmiData.pounds} ${bmiData.inches} = ${bmiData.bmi}");
+    //print("form: $field $value");
+    //print("bmiData: ${bmiData.pounds} ${bmiData.inches} = ${bmiData.bmi}");
     setState(() {
       if (field == 'height') {
         bmiData.inches = double.parse(value);
@@ -58,6 +60,7 @@ class _InputPageState extends State<InputPage> {
       }
     });
   }
+
   final _heightController = TextEditingController();
   final _weightController = TextEditingController();
   @override
@@ -67,6 +70,7 @@ class _InputPageState extends State<InputPage> {
     _weightController.dispose();
     super.dispose();
   }
+
   setTheme() {
     setState(() {
       print("isDarkMode: $isDarkMode");
@@ -92,15 +96,15 @@ class _InputPageState extends State<InputPage> {
   ////////////////////////////////////////////
   appBar(title) => AppBar(
         title: Text(title),
-        actions: [
-          Switch(
-            value: isDarkMode,
-            onChanged: (value) {
-              isDarkMode = value;
-              setTheme();
-            },
-          ),
-        ],
+        // actions: [
+        //   Switch(
+        //     value: isDarkMode,
+        //     onChanged: (value) {
+        //       isDarkMode = value;
+        //       setTheme();
+        //     },
+        //   ),
+        // ],
       );
 
   ////////////////////////////////////////////
@@ -128,33 +132,44 @@ class _InputPageState extends State<InputPage> {
         child: const Icon(Icons.monitor_heart),
       );
 
-  body() => Flex(
-        direction: Axis.vertical,
+  body() {
+    return Column(children: [
+      Expanded(
+          child: Row(
         children: [
-          Row(
-            children: [
-              expandedBox(
-                child: bmiForm(),
-              ),
-              expandedBox(child: Text("Two")),
-            ],
+          Expanded(
+            child: ReusableCard( child: bmiForm(),position: "left",),
           ),
-          expandedBox(child: Text("Three")),
-          Row(
-            children: [
-              expandedBox(child: Text("Four")),
-              expandedBox(child: Text("Five")),
-            ],
+          Expanded(
+            child: ReusableCard(child: bmiForm(),position: "right",),
           ),
         ],
-      );
+      )),
+      Expanded(
+        child: ReusableCard(color: Color(0xFF3D3E44), child: bmiForm(),position: "wide",),
+      ),
+      Expanded(
+          child: Row(
+        children: [
+          Expanded(
+            child: ReusableCard( child: bmiForm(), position: "left",),
+          ),
+          Expanded(
+            child: ReusableCard(child: bmiForm(), position: "right",),
+            ),
+        ],
+      )),
+    ]);
+  }
 
   bmiForm() {
     return Column(
       mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               width: 60,
@@ -163,7 +178,6 @@ class _InputPageState extends State<InputPage> {
             ),
             Container(
               width: 70,
-              //height: 120,
               child: TextFormField(
                 controller: _heightController,
                 style: TextStyle(color: Colors.white),
@@ -176,13 +190,14 @@ class _InputPageState extends State<InputPage> {
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
                   setBmiData("height", value);
-                  value = '';
                 },
               ),
             ),
           ],
         ),
         Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               width: 60,
@@ -191,7 +206,6 @@ class _InputPageState extends State<InputPage> {
             ),
             Container(
               width: 70,
-              //height: 120,
               child: TextFormField(
                 controller: _weightController,
                 style: TextStyle(color: Colors.white),
@@ -199,7 +213,7 @@ class _InputPageState extends State<InputPage> {
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                 ],
                 decoration: InputDecoration(
-                hintText: "Pounds",
+                  hintText: "Pounds",
                 ),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
@@ -210,36 +224,52 @@ class _InputPageState extends State<InputPage> {
           ],
         ),
         OutlinedButton(
+          style: ButtonStyle(
+            minimumSize: MaterialStateProperty.all(Size(135, 40)),
+          ),
             onPressed: () {
-              saveButtonEnabled() ? saveBmiData() : null;},
+              saveButtonEnabled() ? saveBmiData() : null;
+            },
             child: Text("Save"))
       ],
     );
   }
 }
 
-class expandedBox extends StatelessWidget {
-  expandedBox({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-  Widget child;
-  Color cardColor = Colors.grey.shade900;
+class ReusableCard extends StatelessWidget {
+  final Color defColor = const Color(0xFF2D2E44);
+  final String position; // left, right, center, wide - to affect margins
+  final Color? color;
+  final Widget? child;
+
+  const ReusableCard({super.key,  this.color, this.child, this.position = "wide"});
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.all(5.0),
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: cardColor,
-          borderRadius: BorderRadius.circular(10.0),
+    const double defMargin = 10;
+    const double defHalfMargin = defMargin / 2;
+    late EdgeInsetsGeometry? margin;
+
+    if (position == "left") margin = const EdgeInsets.fromLTRB(defMargin, defHalfMargin, defHalfMargin, defHalfMargin);
+    if (position == "right") margin = const EdgeInsets.fromLTRB(defHalfMargin, defHalfMargin, defMargin, defHalfMargin);
+    if (position == "center") margin = const EdgeInsets.fromLTRB(defHalfMargin, defHalfMargin, defHalfMargin, defHalfMargin);
+    if (position == "wide") margin = const EdgeInsets.fromLTRB(defMargin, defHalfMargin, defMargin, defHalfMargin);
+
+    return Container(
+      margin: margin,
+      padding: const EdgeInsets.all(5.0),
+      decoration: BoxDecoration(
+        color: color ?? defColor,
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(
+
+          color: Colors.grey.shade800,
+          width: 2,
         ),
-        height: 200,
-        child: child,
       ),
+      child: child ?? const Text("Empty Box"),
     );
   }
 }
+
+
