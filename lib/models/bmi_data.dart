@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'gender.dart';
+import '../widgets/gender.dart';
 
 class BmiData {
 

@@ -7,6 +7,12 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      onTap: (int index) {
+        print("BottomNavBar: $index");
+        if (index == 0) {
+          Navigator.pushNamed(context, '/input_page');
+        }
+      },
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
  enum Genders {unknown, male, female}
 
 class Gender extends StatelessWidget {
-  late Genders genderChoice;
+  late final Genders genderChoice;
 
   Gender({
     super.key,

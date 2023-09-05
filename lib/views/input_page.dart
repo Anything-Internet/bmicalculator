@@ -1,17 +1,16 @@
-import 'package:bmicalculator/bmi_data.dart';
-import 'package:bmicalculator/gender.dart';
-import 'package:bmicalculator/round_icon_button.dart';
+import 'package:bmicalculator/models/bmi_data.dart';
+import 'package:bmicalculator/widgets/gender.dart';
+import 'package:bmicalculator/widgets/round_icon_button.dart';
 import 'package:bmicalculator/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'bottom_navbar.dart';
-import 'reusable_card.dart';
+import '../widgets/app_bar.dart';
+import '../widgets/bottom_navbar.dart';
+import '../widgets/reusable_card.dart';
 
 class InputPage extends StatefulWidget {
-  const InputPage({super.key, required this.title});
-
-  final String title;
+  const InputPage({super.key});
 
   @override
   State<InputPage> createState() => _InputPageState();
@@ -71,7 +70,7 @@ class _InputPageState extends State<InputPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(widget.title),
+      appBar: appBar("BMI Calculator"),
       body: body(),
       bottomNavigationBar: const BottomNavBar(),
       //floatingActionButton: floatingActionButton(),
@@ -97,7 +96,11 @@ class _InputPageState extends State<InputPage> {
                   ? Colors.blue
                   : const Color(0xFF252536),
               callback: () {
-                setBmiData("gender", bmiData.gender == Genders.male ? Genders.unknown : Genders.male);
+                setBmiData(
+                    "gender",
+                    bmiData.gender == Genders.male
+                        ? Genders.unknown
+                        : Genders.male);
               },
               child: Gender(genderChoice: Genders.male),
             ),
@@ -109,7 +112,11 @@ class _InputPageState extends State<InputPage> {
                   ? Colors.pink.shade300
                   : const Color(0xFF252536),
               callback: () {
-                setBmiData("gender", bmiData.gender == Genders.female ? Genders.unknown : Genders.female);
+                setBmiData(
+                    "gender",
+                    bmiData.gender == Genders.female
+                        ? Genders.unknown
+                        : Genders.female);
               },
               child: Gender(genderChoice: Genders.female),
             ),
@@ -153,7 +160,7 @@ class _InputPageState extends State<InputPage> {
           ),
         ),
       ),
-       Expanded(
+      Expanded(
         child: Row(
           children: [
             Expanded(
@@ -162,7 +169,7 @@ class _InputPageState extends State<InputPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text("Weight", style: const TextStyle(fontSize: 20)),
+                    const Text("Weight", style: TextStyle(fontSize: 20)),
                     Text(bmiData.pounds.toString(),
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 40)),
@@ -175,9 +182,7 @@ class _InputPageState extends State<InputPage> {
                             setBmiData('weight', bmiData.pounds - 5);
                           },
                           tooltip: '',
-                          child: const Icon(
-                              Icons.remove,
-                              color: Colors.white),
+                          child: const Icon(Icons.remove, color: Colors.white),
                         ),
                         RoundIconButton(
                           //borderColor: myGrey,
@@ -199,7 +204,7 @@ class _InputPageState extends State<InputPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text("Age", style: const TextStyle(fontSize: 20)),
+                    const Text("Age", style: TextStyle(fontSize: 20)),
                     Text(bmiData.age.toString(),
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 40)),
@@ -212,9 +217,7 @@ class _InputPageState extends State<InputPage> {
                             setBmiData('age', bmiData.age - 1);
                           },
                           tooltip: '',
-                          child: const Icon(
-                              Icons.remove,
-                              color: Colors.white),
+                          child: const Icon(Icons.remove, color: Colors.white),
                         ),
                         RoundIconButton(
                           //borderColor: myGrey,
@@ -236,28 +239,18 @@ class _InputPageState extends State<InputPage> {
       ReusableCard(
         color: Colors.red.shade900,
         position: "wide",
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text("BMI: ${bmiData.bmi > 0 ? bmiData.bmi : 0}"),
-                Text("Category: ${bmiData.bmiScale ?? "unknown"}"),
-              ],
-            ),
-          ],
+        child: const Text(
+          "Calculate BMI",
+          style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         callback: () {
-          print("BMI: ${bmiData.bmi}");
+          Navigator.pushNamed(
+            context,
+            '/results_page',
+            arguments: bmiData,
+          );
         },
       ),
     ]);
   }
-}
-
-appBar(title) {
-  return AppBar(
-    title: Text(title, style: const TextStyle()),
-  );
 }
