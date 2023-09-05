@@ -1,7 +1,11 @@
 import 'package:bmicalculator/bmi_data.dart';
-import 'package:flutter/material.dart';
+import 'package:bmicalculator/gender.dart';
 import 'package:bmicalculator/theme.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'bottom_navbar.dart';
+import 'reusable_card.dart';
 
 class InputPage extends StatefulWidget {
   const InputPage({super.key, required this.title});
@@ -15,28 +19,16 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   ////////////////////////////////////////////
 
-  bool isDarkMode = theme.currentTheme == "dark" ? true : false;
-
   String inputWeight = "";
   String inputHeight = "";
 
-  List<BmiData> bmiDataList = [
-    BmiData(pounds: 150, inches: 60),
-    BmiData(pounds: 200, inches: 72),
-    BmiData(pounds: 250, inches: 84),
-  ];
   BmiData bmiData = BmiData();
 
   saveBmiData() {
     setState(() {
-      bmiDataList.add(bmiData);
       bmiData = BmiData();
       _heightController.clear();
       _weightController.clear();
-      bmiDataList.forEach((element) {
-        print(
-            "bmiDataList:  ${element.inches} ${element.pounds} = ${element.bmi.toStringAsFixed(2)}");
-      });
     });
   }
 
@@ -47,16 +39,16 @@ class _InputPageState extends State<InputPage> {
     return false;
   }
 
-  setBmiData(String field, String value) {
-    value = value == "" ? "0" : value;
-    //print("form: $field $value");
-    //print("bmiData: ${bmiData.pounds} ${bmiData.inches} = ${bmiData.bmi}");
+  setBmiData(String field, var value) {
     setState(() {
       if (field == 'height') {
-        bmiData.inches = double.parse(value);
+        bmiData.inches = value.round();
       }
       if (field == 'weight') {
-        bmiData.pounds = double.parse(value);
+        bmiData.pounds = value.round();
+      }
+      if (field == 'gender') {
+        bmiData.gender = value;
       }
     });
   }
@@ -72,18 +64,6 @@ class _InputPageState extends State<InputPage> {
     super.dispose();
   }
 
-  setTheme() {
-    setState(() {
-      print("isDarkMode: $isDarkMode");
-      theme.toggleTheme();
-      isDarkMode = theme.currentTheme == "dark" ? true : false;
-      print("isDarkMode: $isDarkMode");
-
-      Theme(data: theme.dark, child: widget);
-      // Theme.of(context)
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,7 +74,6 @@ class _InputPageState extends State<InputPage> {
     );
   }
 
-
   ////////////////////////////////////////////
   floatingActionButton() => FloatingActionButton(
         onPressed: () {},
@@ -103,210 +82,116 @@ class _InputPageState extends State<InputPage> {
       );
 
   body() {
-    return Column(children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Expanded(
           child: Row(
         children: [
           Expanded(
             child: ReusableCard(
-              child: bmiForm(),
               position: "left",
+              color: bmiData.gender == Genders.male
+                  ? Colors.blue
+                  : const Color(0xFF252536),
+              callback: () {
+                setBmiData("gender", Genders.male);
+              },
+              child: Gender(genderChoice: Genders.male),
             ),
           ),
           Expanded(
             child: ReusableCard(
-              child: bmiForm(),
               position: "right",
+              color: bmiData.gender == Genders.female
+                  ? Colors.pink.shade300
+                  : const Color(0xFF252536),
+              callback: () {
+                setBmiData("gender", Genders.female);
+              },
+              child: Gender(genderChoice: Genders.female),
             ),
           ),
         ],
       )),
       Expanded(
         child: ReusableCard(
-          color: const Color(0xFF3D3E44),
-          child: bmiForm(),
           position: "wide",
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Text("Height", style: TextStyle(fontSize: 20)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(bmiData.inches.toString(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 40)),
+                  const Text(
+                    " inches",
+                  ),
+                ],
+              ),
+              Slider(
+                value: bmiData.inches,
+                min: 0,
+                max: 100,
+                divisions: 100,
+                thumbColor: myRed,
+                activeColor: myRed,
+                overlayColor: MaterialStateColor.resolveWith(
+                    (states) => myRed.withOpacity(0.15)),
+                onChanged: (value) {
+                  setBmiData('height', value);
+                },
+              ),
+            ],
+          ),
         ),
       ),
-      Expanded(
-          child: Row(
-        children: [
-          Expanded(
-            child: ReusableCard(
-              child: bmiForm(),
-              position: "left",
+      const Expanded(
+        child: Row(
+          children: [
+            Expanded(
+              child: ReusableCard(
+                position: "left",
+                child: Placeholder(),
+              ),
             ),
-          ),
-          Expanded(
-            child: ReusableCard(
-              child: bmiForm(),
-              position: "right",
+            Expanded(
+              child: ReusableCard(
+                position: "right",
+                child: Placeholder(),
+              ),
             ),
-          ),
-        ],
-      )),
+          ],
+        ),
+      ),
+      ReusableCard(
+        color: Colors.red.shade900,
+        position: "wide",
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text("BMI: ${bmiData.bmi > 0 ? bmiData.bmi : 0}"),
+                Text("Category: ${bmiData.bmiScale ?? "unknown"}"),
+              ],
+            ),
+          ],
+        ),
+        callback: () {
+          print("BMI: ${bmiData.bmi}");
+        },
+      ),
     ]);
-  }
-
-  bmiForm() {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 60,
-              alignment: Alignment.centerRight,
-              child: const Text("Height: "),
-            ),
-            Container(
-              width: 70,
-              child: TextFormField(
-                controller: _heightController,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  hintText: "inches",
-                ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-                ],
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  setBmiData("height", value);
-                },
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 60,
-              alignment: Alignment.centerRight,
-              child: const Text("Weight: "),
-            ),
-            SizedBox(
-              width: 70,
-              child: TextFormField(
-                controller: _weightController,
-                style: const TextStyle(color: Colors.white),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-                ],
-                decoration: const InputDecoration(
-                  hintText: "Pounds",
-                ),
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  setBmiData("weight", value);
-                },
-              ),
-            ),
-          ],
-        ),
-        OutlinedButton(
-            style: ButtonStyle(
-              minimumSize: MaterialStateProperty.all(Size(135, 40)),
-            ),
-            onPressed: () {
-              saveButtonEnabled() ? saveBmiData() : null;
-            },
-            child: const Text("Save"))
-      ],
-    );
   }
 }
 
 appBar(title) {
   return AppBar(
-    title: Text(title),
-    // actions: [
-    //   Switch(
-    //     value: isDarkMode,
-    //     onChanged: (value) {
-    //       isDarkMode = value;
-    //       setTheme();
-    //     },
-    //   ),
-    // ],
+    title: Text(title, style: const TextStyle()),
   );
-}
-
-class BottomNavBar extends StatelessWidget {
-  const BottomNavBar({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.business),
-          label: 'Business',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.school),
-          label: 'School',
-        ),
-      ],
-    );
-  }
-}
-
-class ReusableCard extends StatelessWidget {
-  final Color defColor = const Color(0xFF2D2E44);
-  final String position; // left, right, center, wide - to affect margins
-  final Color? color;
-  final Widget? child;
-
-  const ReusableCard(
-      {super.key, this.color, this.child, this.position = "wide"});
-
-  @override
-  Widget build(BuildContext context) {
-    const double defMargin = 10;
-    const double defHalfMargin = defMargin / 2;
-    late EdgeInsetsGeometry? margin;
-
-    if (position == "left") {
-      margin = const EdgeInsets.fromLTRB(
-          defMargin, defHalfMargin, defHalfMargin, defHalfMargin);
-    }
-    if (position == "right") {
-      margin = const EdgeInsets.fromLTRB(
-          defHalfMargin, defHalfMargin, defMargin, defHalfMargin);
-    }
-    if (position == "center") {
-      margin = const EdgeInsets.fromLTRB(
-          defHalfMargin, defHalfMargin, defHalfMargin, defHalfMargin);
-    }
-    if (position == "wide") {
-      margin = const EdgeInsets.fromLTRB(
-          defMargin, defHalfMargin, defMargin, defHalfMargin);
-    }
-
-    return Container(
-      margin: margin,
-      padding: const EdgeInsets.all(5.0),
-      decoration: BoxDecoration(
-        color: color ?? defColor,
-        borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(
-          color: Colors.grey.shade800,
-          width: 2,
-        ),
-      ),
-      child: child ?? const Text("Empty Box"),
-    );
-  }
 }

@@ -1,9 +1,11 @@
 import 'dart:math';
+import 'gender.dart';
 
 class BmiData {
 
   double _pounds = 0;
   double _inches = 0;
+  Genders _gender = Genders.unknown;
 
   List underweight = [0.0, 18.5];
   List healthy = [18.5, 24.9];
@@ -14,9 +16,11 @@ class BmiData {
   get kilos { return _pounds * 0.45; }
   get inches {return _inches; }
   get cms { return _inches * 2.54; }
+  get gender {return _gender;}
 
   set inches(value) {_inches = value;}
   set pounds(value) {_pounds = value;}
+  set gender(value) {_gender = value;}
 
   // kilos / sqroot of meters
   get bmi { return kilos / sqrt(cms * 0.01) ; }
