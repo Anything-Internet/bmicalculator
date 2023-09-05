@@ -1,5 +1,6 @@
 import 'package:bmicalculator/bmi_data.dart';
 import 'package:bmicalculator/gender.dart';
+import 'package:bmicalculator/round_icon_button.dart';
 import 'package:bmicalculator/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +48,9 @@ class _InputPageState extends State<InputPage> {
       if (field == 'weight') {
         bmiData.pounds = value.round();
       }
+      if (field == 'age') {
+        bmiData.age = value.round();
+      }
       if (field == 'gender') {
         bmiData.gender = value;
       }
@@ -93,7 +97,7 @@ class _InputPageState extends State<InputPage> {
                   ? Colors.blue
                   : const Color(0xFF252536),
               callback: () {
-                setBmiData("gender", Genders.male);
+                setBmiData("gender", bmiData.gender == Genders.male ? Genders.unknown : Genders.male);
               },
               child: Gender(genderChoice: Genders.male),
             ),
@@ -105,7 +109,7 @@ class _InputPageState extends State<InputPage> {
                   ? Colors.pink.shade300
                   : const Color(0xFF252536),
               callback: () {
-                setBmiData("gender", Genders.female);
+                setBmiData("gender", bmiData.gender == Genders.female ? Genders.unknown : Genders.female);
               },
               child: Gender(genderChoice: Genders.female),
             ),
@@ -149,19 +153,81 @@ class _InputPageState extends State<InputPage> {
           ),
         ),
       ),
-      const Expanded(
+       Expanded(
         child: Row(
           children: [
             Expanded(
               child: ReusableCard(
                 position: "left",
-                child: Placeholder(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text("Weight", style: const TextStyle(fontSize: 20)),
+                    Text(bmiData.pounds.toString(),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 40)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        RoundIconButton(
+                          //borderColor: myGrey,
+                          onPressed: () {
+                            setBmiData('weight', bmiData.pounds - 5);
+                          },
+                          tooltip: '',
+                          child: const Icon(
+                              Icons.remove,
+                              color: Colors.white),
+                        ),
+                        RoundIconButton(
+                          //borderColor: myGrey,
+                          onPressed: () {
+                            setBmiData('weight', bmiData.pounds + 5);
+                          },
+                          tooltip: '',
+                          child: const Icon(Icons.add, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(
               child: ReusableCard(
                 position: "right",
-                child: Placeholder(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text("Age", style: const TextStyle(fontSize: 20)),
+                    Text(bmiData.age.toString(),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 40)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        RoundIconButton(
+                          //borderColor: myGrey,
+                          onPressed: () {
+                            setBmiData('age', bmiData.age - 1);
+                          },
+                          tooltip: '',
+                          child: const Icon(
+                              Icons.remove,
+                              color: Colors.white),
+                        ),
+                        RoundIconButton(
+                          //borderColor: myGrey,
+                          onPressed: () {
+                            setBmiData('age', bmiData.age + 1);
+                          },
+                          tooltip: '',
+                          child: const Icon(Icons.add, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
