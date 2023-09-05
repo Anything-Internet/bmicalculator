@@ -237,18 +237,22 @@ class _InputPageState extends State<InputPage> {
         ),
       ),
       ReusableCard(
-        color: Colors.red.shade900,
+        color: myRed,
         position: "wide",
-        child: const Text(
-          "Calculate BMI",
-          style: TextStyle(fontSize: 20, color: Colors.white),
+        child: const Center(
+          child: Text(
+            "Calculate BMI",
+            style: TextStyle(fontSize: 20, color: Colors.white),
+          ),
         ),
         callback: () {
-          Navigator.pushNamed(
-            context,
-            '/results_page',
-            arguments: bmiData,
-          );
+          if (bmiData.bmi > 0 && bmiData.bmi < double.infinity) {
+            Navigator.pushNamed(
+              context,
+              '/results_page',
+              arguments: bmiData,
+            );
+          }
         },
       ),
     ]);

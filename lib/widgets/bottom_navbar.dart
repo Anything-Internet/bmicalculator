@@ -10,7 +10,7 @@ class BottomNavBar extends StatelessWidget {
       onTap: (int index) {
         print("BottomNavBar: $index");
         if (index == 0) {
-          Navigator.pushNamed(context, '/input_page');
+          Navigator.pushReplacementNamed(context, '/input_page');
         }
       },
       items: const <BottomNavigationBarItem>[
@@ -19,12 +19,14 @@ class BottomNavBar extends StatelessWidget {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.business),
-          label: 'Business',
+          icon: Icon(Icons.business,
+          color: Colors.transparent,),
+          label: '',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.school),
-          label: 'School',
+          icon: Icon(Icons.school,
+          color: Colors.transparent,),
+          label: '',
         ),
       ],
     );
