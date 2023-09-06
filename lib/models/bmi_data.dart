@@ -32,11 +32,11 @@ class BmiData {
   }
 
   get kilos {
-    return _pounds * 0.45;
+    return (_pounds * 0.45).round();
   }
 
   get inches {
-    return _inches;
+    return _inches.round();
   }
 
   get age {
@@ -44,7 +44,7 @@ class BmiData {
   }
 
   get cms {
-    return _inches * 2.54;
+    return (_inches * 2.54).round();
   }
 
   get gender {

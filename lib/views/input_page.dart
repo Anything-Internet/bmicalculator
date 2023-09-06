@@ -21,6 +21,7 @@ class _InputPageState extends State<InputPage> {
 
   String inputWeight = "";
   String inputHeight = "";
+  bool isMetric = true;
 
   BmiData bmiData = BmiData();
 
@@ -72,7 +73,7 @@ class _InputPageState extends State<InputPage> {
     return Scaffold(
       appBar: appBar("BMI Calculator"),
       body: body(),
-      bottomNavigationBar: const BottomNavBar(),
+      //bottomNavigationBar: const BottomNavBar(),
       //floatingActionButton: floatingActionButton(),
     );
   }
@@ -86,6 +87,43 @@ class _InputPageState extends State<InputPage> {
 
   body() {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      ReusableCard(
+        color: myRed,
+        position: "wide",
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                isMetric ? "Metric":
+                "Imperial",
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              Switch(
+                trackColor: MaterialStateColor.resolveWith(
+                    (states) => myDarkBlue.withOpacity(0.45)),
+                thumbColor: MaterialStateColor.resolveWith(
+                        (states) => myDarkBlue.withOpacity(0.0)),
+
+                  value: isMetric,
+                  onChanged: (value){setState(() {
+                    isMetric = value;
+                  });}
+              ),
+            ],
+          ),
+        ),
+        callback: () {
+          if (bmiData.bmi > 0 && bmiData.bmi < double.infinity) {
+            Navigator.pushNamed(
+              context,
+              '/results_page',
+              arguments: bmiData,
+            );
+          }
+        },
+      ),
+
       Expanded(
           child: Row(
         children: [
@@ -135,11 +173,14 @@ class _InputPageState extends State<InputPage> {
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
-                  Text(bmiData.inches.toString(),
+                  isMetric ? Text(bmiData.cms.toString(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 40))
+                      : Text(bmiData.inches.toString(),
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 40)),
-                  const Text(
-                    " inches",
+                   Text(
+                   isMetric ? " cms":" inches",
                   ),
                 ],
               ),
@@ -151,7 +192,7 @@ class _InputPageState extends State<InputPage> {
                 thumbColor: myRed,
                 activeColor: myRed,
                 overlayColor: MaterialStateColor.resolveWith(
-                    (states) => myRed.withOpacity(0.15)),
+                    (states) => myRed.withOpacity(0.0)),
                 onChanged: (value) {
                   setBmiData('height', value);
                 },
@@ -170,9 +211,22 @@ class _InputPageState extends State<InputPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const Text("Weight", style: TextStyle(fontSize: 20)),
-                    Text(bmiData.pounds.toString(),
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 40)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      textBaseline: TextBaseline.alphabetic,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      children: [
+                        Text(
+                            isMetric ? bmiData.kilos.toString():
+                            bmiData.pounds.toString(),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 40)),
+                        Text(
+                          isMetric ? " kgs":" pounds",
+                        ),
+                      ],
+                    ),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -236,24 +290,27 @@ class _InputPageState extends State<InputPage> {
           ],
         ),
       ),
-      ReusableCard(
-        color: myRed,
-        position: "wide",
-        child: const Center(
-          child: Text(
-            "Calculate BMI",
-            style: TextStyle(fontSize: 20, color: Colors.white),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
+        child: ReusableCard(
+          color: myRed,
+          position: "wide",
+          child: const Center(
+            child: Text(
+              "Calculate BMI",
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
           ),
+          callback: () {
+            if (bmiData.bmi > 0 && bmiData.bmi < double.infinity) {
+              Navigator.pushNamed(
+                context,
+                '/results_page',
+                arguments: bmiData,
+              );
+            }
+          },
         ),
-        callback: () {
-          if (bmiData.bmi > 0 && bmiData.bmi < double.infinity) {
-            Navigator.pushNamed(
-              context,
-              '/results_page',
-              arguments: bmiData,
-            );
-          }
-        },
       ),
     ]);
   }
