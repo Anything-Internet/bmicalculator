@@ -40,6 +40,7 @@ class ReusableCard extends StatelessWidget {
     return GestureDetector(
       child: Container(
         margin: margin,
+        width: double.infinity,
         padding: const EdgeInsets.all(5.0),
         decoration: BoxDecoration(
           color: color ?? defColor,
